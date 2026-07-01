@@ -22,4 +22,10 @@ urlpatterns = [
         name="purchase_order_detail",
     ),
 
+    path(
+        "<int:pk>/items/add/",
+        views.add_purchase_item,
+        name="add_purchase_item",
+    ),
+
 ]

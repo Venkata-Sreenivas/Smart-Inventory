@@ -5,11 +5,9 @@ from django.shortcuts import (
     get_object_or_404,
 )
 
-from .models import PurchaseOrder
-from .forms import (
-    PurchaseOrderForm,
-    PurchaseItemFormSet,
-)
+from .models import PurchaseOrder, PurchaseItem
+from .forms import PurchaseOrderForm, PurchaseItemFormSet
+from .forms_purchase import PurchaseItemForm
 
 
 def purchase_order_list(request):
@@ -58,33 +56,20 @@ def add_purchase_order(request):
 
             purchase_order.save()
 
-            formset = PurchaseItemFormSet(
-                request.POST,
-                instance=purchase_order
+            return redirect(
+                "purchase_order_detail",
+                pk=purchase_order.pk,
             )
-
-            if formset.is_valid():
-
-                formset.save()
-
-                return redirect("purchase_order_list")
-
-        else:
-
-            formset = PurchaseItemFormSet(request.POST)
 
     else:
 
         form = PurchaseOrderForm()
-
-        formset = PurchaseItemFormSet()
 
     return render(
         request,
         "orders/purchase_order_form.html",
         {
             "form": form,
-            "formset": formset,
             "title": "New Purchase Order",
         },
     )
@@ -99,11 +84,54 @@ def purchase_order_detail(request, pk):
 
     items = order.items.all()
 
+    grand_total = sum(
+        item.subtotal() for item in items
+    )
+
     return render(
         request,
         "orders/purchase_order_detail.html",
         {
             "order": order,
             "items": items,
+            "grand_total": grand_total,
+        },
+    )
+
+
+def add_purchase_item(request, pk):
+
+    order = get_object_or_404(
+        PurchaseOrder,
+        pk=pk,
+    )
+
+    if request.method == "POST":
+
+        form = PurchaseItemForm(request.POST)
+
+        if form.is_valid():
+
+            item = form.save(commit=False)
+
+            item.purchase_order = order
+
+            item.save()
+
+            return redirect(
+                "purchase_order_detail",
+                pk=order.pk,
+            )
+
+    else:
+
+        form = PurchaseItemForm()
+
+    return render(
+        request,
+        "orders/purchase_item_form.html",
+        {
+            "form": form,
+            "order": order,
         },
     )
