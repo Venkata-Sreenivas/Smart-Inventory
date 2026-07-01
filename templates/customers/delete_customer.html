@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-danger text-white">
+
+                    <h4>
+
+                        Delete Customer
+
+                    </h4>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p class="fs-5">
+
+                        Are you sure you want to delete
+
+                        <strong>
+
+                            {{ customer.first_name }}
+                            {{ customer.last_name }}
+
+                        </strong>?
+
+                    </p>
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <a
+                            href="{% url 'customer_list' %}"
+                            class="btn btn-secondary">
+
+                            Cancel
+
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger">
+
+                            Delete Customer
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <h2 class="mb-4">Dashboard</h2>
+
+    <!-- Dashboard Cards -->
+
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-primary text-white">
+
+                <div class="card-body">
+
+                    <h5>Total Products</h5>
+
+                    <h2>{{ total_products }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-success text-white">
+
+                <div class="card-body">
+
+                    <h5>Categories</h5>
+
+                    <h2>{{ total_categories }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-warning text-dark">
+
+                <div class="card-body">
+
+                    <h5>Low Stock</h5>
+
+                    <h2>{{ low_stock }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-danger text-white">
+
+                <div class="card-body">
+
+                    <h5>Inventory Value</h5>
+
+                    <h4>₹ {{ inventory_value }}</h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+
+    <div class="row">
+
+        <div class="col-lg-6 mb-4">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+
+                        Products by Category
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="categoryChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6 mb-4">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+
+                        Stock Quantity
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="stockChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Recent Products -->
+
+    <div class="card shadow">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+
+                Recent Products
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Name</th>
+
+                        <th>Category</th>
+
+                        <th>Price</th>
+
+                        <th>Quantity</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for product in recent_products %}
+
+                    <tr>
+
+                        <td>{{ product.id }}</td>
+
+                        <td>{{ product.name }}</td>
+
+                        <td>{{ product.category }}</td>
+
+                        <td>₹ {{ product.price }}</td>
+
+                        <td>{{ product.quantity }}</td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center">
+
+                            No Products Found
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const categoryCtx = document.getElementById('categoryChart');
+
+new Chart(categoryCtx, {
+
+    type: 'pie',
+
+    data: {
+
+        labels: {{ category_labels|safe }},
+
+        datasets: [{
+
+            data: {{ category_counts|safe }}
+
+        }]
+
+    }
+
+});
+
+const stockCtx = document.getElementById('stockChart');
+
+new Chart(stockCtx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: {{ stock_labels|safe }},
+
+        datasets: [{
+
+            label: 'Stock',
+
+            data: {{ stock_values|safe }}
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% endblock %}
