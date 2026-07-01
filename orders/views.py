@@ -1,8 +1,15 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404,
+)
 
-from .forms import PurchaseOrderForm
 from .models import PurchaseOrder
+from .forms import (
+    PurchaseOrderForm,
+    PurchaseItemFormSet,
+)
 
 
 def purchase_order_list(request):
@@ -14,7 +21,6 @@ def purchase_order_list(request):
     search = request.GET.get("search")
 
     if search:
-
         orders = orders.filter(
             supplier__company_name__icontains=search
         )
@@ -44,19 +50,60 @@ def add_purchase_order(request):
 
         if form.is_valid():
 
-            form.save()
+            purchase_order = form.save(commit=False)
 
-            return redirect("purchase_order_list")
+            purchase_order.order_number = (
+                f"PO-{PurchaseOrder.objects.count()+1:05d}"
+            )
+
+            purchase_order.save()
+
+            formset = PurchaseItemFormSet(
+                request.POST,
+                instance=purchase_order
+            )
+
+            if formset.is_valid():
+
+                formset.save()
+
+                return redirect("purchase_order_list")
+
+        else:
+
+            formset = PurchaseItemFormSet(request.POST)
 
     else:
 
         form = PurchaseOrderForm()
+
+        formset = PurchaseItemFormSet()
 
     return render(
         request,
         "orders/purchase_order_form.html",
         {
             "form": form,
-            "title": "Add Purchase Order",
+            "formset": formset,
+            "title": "New Purchase Order",
+        },
+    )
+
+
+def purchase_order_detail(request, pk):
+
+    order = get_object_or_404(
+        PurchaseOrder,
+        pk=pk,
+    )
+
+    items = order.items.all()
+
+    return render(
+        request,
+        "orders/purchase_order_detail.html",
+        {
+            "order": order,
+            "items": items,
         },
     )

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>
+
+                Purchase Order {{ order.order_number }}
+
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <strong>Supplier</strong>
+
+                    <br>
+
+                    {{ order.supplier }}
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <strong>Status</strong>
+
+                    <br>
+
+                    {{ order.status }}
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <strong>Order Date</strong>
+
+                    <br>
+
+                    {{ order.order_date }}
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <h4>
+
+                Products
+
+            </h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Product</th>
+
+                        <th>Quantity</th>
+
+                        <th>Price</th>
+
+                        <th>Total</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for item in items %}
+
+                    <tr>
+
+                        <td>{{ item.product }}</td>
+
+                        <td>{{ item.quantity }}</td>
+
+                        <td>{{ item.purchase_price }}</td>
+
+                        <td>{{ item.subtotal }}</td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="4" class="text-center">
+
+                            No Products Added Yet
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <a
+                href="#"
+                class="btn btn-success">
+
+                + Add Product
+
+            </a>
+
+            <a
+                href="{% url 'purchase_order_list' %}"
+                class="btn btn-secondary">
+
+                Back
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
