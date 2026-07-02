@@ -1,5 +1,9 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404,
+)
 
 from .forms import ProductForm
 from .models import Product, Category
@@ -115,4 +119,37 @@ def delete_product(request, pk):
         request,
         "inventory/delete_product.html",
         {"product": product},
+    )
+    
+from orders.models import PurchaseItem, SalesItem
+
+def product_detail(request, pk):
+
+    product = get_object_or_404(
+        Product,
+        pk=pk,
+    )
+
+    purchase_history = PurchaseItem.objects.filter(
+        product=product
+    ).select_related("purchase_order")
+
+    sales_history = SalesItem.objects.filter(
+        product=product
+    ).select_related("sales_order")
+
+    context = {
+
+        "product": product,
+
+        "purchase_history": purchase_history,
+
+        "sales_history": sales_history,
+
+    }
+
+    return render(
+        request,
+        "inventory/product_detail.html",
+        context,
     )

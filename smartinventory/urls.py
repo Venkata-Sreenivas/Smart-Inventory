@@ -34,7 +34,21 @@ urlpatterns = [
         "orders/",
         include("orders.urls")
     ),
-
+    
+    path(
+        "sales/",
+        include("orders.sales_urls"),
+    ),
+    
+    path(
+        "reports/",
+        include("reports.urls"),
+    ),
+    
+    path(
+        "accounts/",
+        include("accounts.urls"),
+    ),
 ]
 
 if settings.DEBUG:

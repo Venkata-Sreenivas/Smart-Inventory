@@ -6,23 +6,25 @@
 
     <div class="card shadow">
 
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-success text-white">
 
-            <h3>Purchase Order {{ order.order_number }}</h3>
+            <h3>
+
+                Sales Order {{ order.invoice_number }}
+
+            </h3>
 
         </div>
 
         <div class="card-body">
 
-            <!-- Order Information -->
-
             <div class="row mb-4">
 
                 <div class="col-md-4">
 
-                    <strong>Supplier</strong><br>
+                    <strong>Customer</strong><br>
 
-                    {{ order.supplier }}
+                    {{ order.customer }}
 
                 </div>
 
@@ -30,11 +32,11 @@
 
                     <strong>Status</strong><br>
 
-                    {% if order.status == "Received" %}
+                    {% if order.status == "Completed" %}
 
                         <span class="badge bg-success">
 
-                            Received
+                            Completed
 
                         </span>
 
@@ -70,15 +72,13 @@
 
             <hr>
 
-            <!-- Products -->
-
             <div class="d-flex justify-content-between align-items-center mb-3">
 
                 <h4>Products</h4>
 
-                {% if order.status == "Pending" %}
+                {% if not order.stock_updated %}
 
-                <a href="{% url 'add_purchase_item' order.id %}"
+                <a href="{% url 'add_sales_item' order.id %}"
                    class="btn btn-success">
 
                     <i class="bi bi-plus-circle"></i>
@@ -101,11 +101,19 @@
 
                         <th>Quantity</th>
 
-                        <th>Purchase Price</th>
+                        <th>Selling Price</th>
 
                         <th>Subtotal</th>
 
-                        <th width="180">Actions</th>
+                        {% if not order.stock_updated %}
+
+                        <th width="180">
+
+                            Actions
+
+                        </th>
+
+                        {% endif %}
 
                     </tr>
 
@@ -121,15 +129,15 @@
 
                         <td>{{ item.quantity }}</td>
 
-                        <td>₹ {{ item.purchase_price }}</td>
+                        <td>₹ {{ item.selling_price }}</td>
 
                         <td>₹ {{ item.subtotal }}</td>
 
+                        {% if not order.stock_updated %}
+
                         <td>
 
-                            {% if order.status == "Pending" %}
-
-                            <a href="{% url 'edit_purchase_item' item.id %}"
+                            <a href="{% url 'edit_sales_item' item.id %}"
                                class="btn btn-warning btn-sm">
 
                                 <i class="bi bi-pencil"></i>
@@ -138,7 +146,7 @@
 
                             </a>
 
-                            <a href="{% url 'delete_purchase_item' item.id %}"
+                            <a href="{% url 'delete_sales_item' item.id %}"
                                class="btn btn-danger btn-sm">
 
                                 <i class="bi bi-trash"></i>
@@ -147,17 +155,9 @@
 
                             </a>
 
-                            {% else %}
-
-                            <span class="text-muted">
-
-                                Locked
-
-                            </span>
-
-                            {% endif %}
-
                         </td>
+
+                        {% endif %}
 
                     </tr>
 
@@ -193,7 +193,11 @@
 
                         </th>
 
+                        {% if not order.stock_updated %}
+
                         <th></th>
+
+                        {% endif %}
 
                     </tr>
 
@@ -203,11 +207,9 @@
 
             <hr>
 
-            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between align-items-center">
 
-            <div class="d-flex justify-content-between">
-
-                <a href="{% url 'purchase_order_list' %}"
+                <a href="{% url 'sales_order_list' %}"
                    class="btn btn-secondary">
 
                     <i class="bi bi-arrow-left"></i>
@@ -218,62 +220,48 @@
 
                 <div>
 
-                    {% if order.status == "Pending" %}
-
-                    <a href="{% url 'edit_purchase_order' order.id %}"
-                       class="btn btn-warning">
-
-                        <i class="bi bi-pencil-square"></i>
-
-                        Edit Order
-
-                    </a>
-
-                    <a href="{% url 'delete_purchase_order' order.id %}"
-                       class="btn btn-danger">
-
-                        <i class="bi bi-trash"></i>
-
-                        Delete Order
-
-                    </a>
-
-                    <a href="{% url 'receive_stock' order.id %}"
+                    <a href="{% url 'sales_invoice_pdf' order.id %}"
                        class="btn btn-primary">
 
-                        <i class="bi bi-box-seam"></i>
+                        <i class="bi bi-file-earmark-pdf"></i>
 
-                        Receive Stock
+                        Download Invoice
 
                     </a>
 
-                    {% elif order.status == "Received" %}
+                    {% if not order.stock_updated %}
 
-                    <button class="btn btn-success" disabled>
+                    <a href="{% url 'complete_sale' order.id %}"
+                       class="btn btn-success">
 
                         <i class="bi bi-check-circle"></i>
 
-                        Stock Received
-
-                    </button>
-
-                    <a href="{% url 'cancel_purchase' order.id %}"
-                       class="btn btn-danger"
-                       onclick="return confirm('Cancel this purchase order and rollback stock?');">
-
-                        <i class="bi bi-x-circle"></i>
-
-                        Cancel Purchase
+                        Complete Sale
 
                     </a>
 
-                    {% else %}
+                    {% if order.status == "Completed" %}
 
-                    <button class="btn btn-danger" disabled>
+                     <a
+                        href="{% url 'cancel_sale' order.id %}"
+                        class="btn btn-danger"
+                        onclick="return confirm('Cancel this sale and restore stock?');">
 
                         <i class="bi bi-x-circle"></i>
 
-                        Purchase Cancelled
+                        Cancel Sale
+
+                    </a>
+
+                    {% endif %}
+
+                    {% else %}
+
+                    <button class="btn btn-success" disabled>
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        Sale Completed
 
                     </button>
 

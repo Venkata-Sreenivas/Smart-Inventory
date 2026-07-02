@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <div class="row">
+
+        <!-- Product Image -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    {% if product.image %}
+
+                        <img
+                            src="{{ product.image.url }}"
+                            class="img-fluid rounded"
+                            style="max-height:350px; object-fit:cover;">
+
+                    {% else %}
+
+                        <img
+                            src="https://via.placeholder.com/350x350?text=No+Image"
+                            class="img-fluid rounded">
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Product Details -->
+
+        <div class="col-lg-8">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h3>{{ product.name }}</h3>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-bordered">
+
+                        <tr>
+                            <th width="30%">Product ID</th>
+                            <td>{{ product.id }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Category</th>
+                            <td>{{ product.category }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Price</th>
+                            <td>₹ {{ product.price }}</td>
+                        </tr>
+
+                        <tr>
+
+                            <th>Available Stock</th>
+
+                            <td>
+
+                                {% if product.quantity == 0 %}
+
+                                    <span class="badge bg-danger">
+
+                                        Out Of Stock
+
+                                    </span>
+
+                                {% elif product.quantity <= 10 %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Low Stock ({{ product.quantity }})
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-success">
+
+                                        {{ product.quantity }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Description</th>
+
+                            <td>
+
+                                {{ product.description|default:"No description available." }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Created</th>
+
+                            <td>{{ product.created_at }}</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Last Updated</th>
+
+                            <td>{{ product.updated_at }}</td>
+
+                        </tr>
+
+                    </table>
+
+                    <div class="mt-4">
+
+                        <a
+                            href="{% url 'product_list' %}"
+                            class="btn btn-secondary">
+
+                            <i class="bi bi-arrow-left"></i>
+
+                            Back
+
+                        </a>
+
+                        <a
+                            href="{% url 'edit_product' product.id %}"
+                            class="btn btn-warning">
+
+                            <i class="bi bi-pencil-square"></i>
+
+                            Edit
+
+                        </a>
+
+                        <a
+                            href="{% url 'delete_product' product.id %}"
+                            class="btn btn-danger">
+
+                            <i class="bi bi-trash"></i>
+
+                            Delete
+
+                        </a>
+
+                    </div>
+
+                    <!-- ================= STOCK MOVEMENT HISTORY ================= -->
+
+                    <hr class="my-5">
+
+                    <h4 class="mb-3">
+
+                        Stock Movement History
+
+                    </h4>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered table-hover">
+
+                            <thead class="table-dark">
+
+                                <tr>
+
+                                    <th>Date</th>
+
+                                    <th>Transaction</th>
+
+                                    <th>Reference</th>
+
+                                    <th>Quantity</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <!-- Purchase History -->
+
+                                {% for item in purchase_history %}
+
+                                <tr>
+
+                                    <td>
+
+                                        {{ item.purchase_order.order_date }}
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+
+                                            Purchase
+
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        {{ item.purchase_order.order_number }}
+
+                                    </td>
+
+                                    <td class="text-success fw-bold">
+
+                                        +{{ item.quantity }}
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                                <!-- Sales History -->
+
+                                {% for item in sales_history %}
+
+                                <tr>
+
+                                    <td>
+
+                                        {{ item.sales_order.order_date }}
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-danger">
+
+                                            Sale
+
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        {{ item.sales_order.invoice_number }}
+
+                                    </td>
+
+                                    <td class="text-danger fw-bold">
+
+                                        -{{ item.quantity }}
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                                {% if not purchase_history and not sales_history %}
+
+                                <tr>
+
+                                    <td colspan="4" class="text-center text-muted">
+
+                                        No stock movement history available.
+
+                                    </td>
+
+                                </tr>
+
+                                {% endif %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <!-- ================================================ -->
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

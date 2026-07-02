@@ -4,19 +4,23 @@
 
 <div class="container-fluid">
 
-    <h2 class="mb-4">Dashboard</h2>
+    <h2 class="mb-4">
 
-    <!-- Dashboard Cards -->
+        Dashboard
+
+    </h2>
+
+    <!-- ================= KPI CARDS ================= -->
 
     <div class="row">
 
         <div class="col-lg-3 col-md-6 mb-4">
 
-            <div class="card bg-primary text-white">
+            <div class="card bg-primary text-white shadow">
 
                 <div class="card-body">
 
-                    <h5>Total Products</h5>
+                    <h6>Total Products</h6>
 
                     <h2>{{ total_products }}</h2>
 
@@ -28,11 +32,11 @@
 
         <div class="col-lg-3 col-md-6 mb-4">
 
-            <div class="card bg-success text-white">
+            <div class="card bg-success text-white shadow">
 
                 <div class="card-body">
 
-                    <h5>Categories</h5>
+                    <h6>Categories</h6>
 
                     <h2>{{ total_categories }}</h2>
 
@@ -44,13 +48,13 @@
 
         <div class="col-lg-3 col-md-6 mb-4">
 
-            <div class="card bg-warning text-dark">
+            <div class="card bg-info text-white shadow">
 
                 <div class="card-body">
 
-                    <h5>Low Stock</h5>
+                    <h6>Customers</h6>
 
-                    <h2>{{ low_stock }}</h2>
+                    <h2>{{ total_customers }}</h2>
 
                 </div>
 
@@ -60,11 +64,79 @@
 
         <div class="col-lg-3 col-md-6 mb-4">
 
-            <div class="card bg-danger text-white">
+            <div class="card bg-secondary text-white shadow">
 
                 <div class="card-body">
 
-                    <h5>Inventory Value</h5>
+                    <h6>Suppliers</h6>
+
+                    <h2>{{ total_suppliers }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-warning shadow">
+
+                <div class="card-body">
+
+                    <h6>Purchase Orders</h6>
+
+                    <h2>{{ total_purchase_orders }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-dark text-white shadow">
+
+                <div class="card-body">
+
+                    <h6>Sales Orders</h6>
+
+                    <h2>{{ total_sales_orders }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-success text-white shadow">
+
+                <div class="card-body">
+
+                    <h6>Total Revenue</h6>
+
+                    <h4>₹ {{ total_revenue }}</h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-danger text-white shadow">
+
+                <div class="card-body">
+
+                    <h6>Inventory Value</h6>
 
                     <h4>₹ {{ inventory_value }}</h4>
 
@@ -76,7 +148,75 @@
 
     </div>
 
-    <!-- Charts -->
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-primary text-white shadow">
+
+                <div class="card-body">
+
+                    <h6>Total Stock</h6>
+
+                    <h2>{{ total_stock }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-warning shadow">
+
+                <div class="card-body">
+
+                    <h6>Low Stock Items</h6>
+
+                    <h2>{{ low_stock }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-success text-white shadow">
+
+                <div class="card-body">
+
+                    <h6>Completed Sales</h6>
+
+                    <h2>{{ completed_sales }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card bg-info text-white shadow">
+
+                <div class="card-body">
+
+                    <h6>Received Orders</h6>
+
+                    <h2>{{ received_orders }}</h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= CHARTS ================= -->
 
     <div class="row">
 
@@ -112,7 +252,7 @@
 
                     <h5 class="mb-0">
 
-                        Stock Quantity
+                        Current Stock Quantity
 
                     </h5>
 
@@ -130,7 +270,81 @@
 
     </div>
 
-    <!-- Recent Products -->
+    <!-- ================= RECENT PRODUCTS ================= -->
+
+    <div class="card shadow mt-4">
+
+        <div class="card-header bg-danger text-white">
+
+            <h5 class="mb-0">
+
+                Low Stock Alerts
+
+            </h5>   
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-striped">
+
+                <thead>
+
+                    <tr>
+
+                            <th>Product</th>
+
+                            <th>Category</th>
+
+                            <th>Available Stock</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for product in low_stock_products %}
+
+                    <tr>
+
+                        <td>{{ product.name }}</td>
+
+                        <td>{{ product.category }}</td>
+
+                        <td>
+
+                            <span class="badge bg-danger">
+
+                                {{ product.quantity }}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="3" class="text-center text-success">
+
+                            🎉 All products have sufficient stock.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
     <div class="card shadow">
 
@@ -208,17 +422,15 @@
 
 </div>
 
-<!-- Chart.js -->
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 
-const categoryCtx = document.getElementById('categoryChart');
+const categoryCtx = document.getElementById("categoryChart");
 
 new Chart(categoryCtx, {
 
-    type: 'pie',
+    type: "pie",
 
     data: {
 
@@ -234,11 +446,11 @@ new Chart(categoryCtx, {
 
 });
 
-const stockCtx = document.getElementById('stockChart');
+const stockCtx = document.getElementById("stockChart");
 
 new Chart(stockCtx, {
 
-    type: 'bar',
+    type: "bar",
 
     data: {
 
@@ -246,7 +458,7 @@ new Chart(stockCtx, {
 
         datasets: [{
 
-            label: 'Stock',
+            label: "Stock",
 
             data: {{ stock_values|safe }}
 

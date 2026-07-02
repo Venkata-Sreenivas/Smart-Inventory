@@ -42,7 +42,7 @@ class PurchaseOrder(models.Model):
         blank=True,
         null=True
     )
-    
+
     stock_updated = models.BooleanField(
         default=False
     )
@@ -115,6 +115,10 @@ class SalesOrder(models.Model):
         max_length=20,
         choices=STATUS_CHOICES,
         default="Pending"
+    )
+
+    stock_updated = models.BooleanField(
+        default=False
     )
 
     created_at = models.DateTimeField(
