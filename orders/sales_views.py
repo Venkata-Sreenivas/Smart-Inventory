@@ -186,8 +186,22 @@ def add_sales_item(request, pk):
 
                 return redirect(
                     "sales_order_detail",
-                    pk=order.id,
+                    pk=order.pk,
                 )
+
+    else:
+
+        form = SalesItemForm()
+
+    return render(
+        request,
+        "orders/sales_item_form.html",
+        {
+            "form": form,
+            "order": order,
+            "title": "Add Sales Item",
+        },
+    )
     
 def complete_sale(request, pk):
 
