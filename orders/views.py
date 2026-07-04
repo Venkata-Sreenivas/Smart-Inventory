@@ -123,7 +123,7 @@ def purchase_order_detail(request, pk):
         },
     )
 
-
+from .forms_purchase import PurchaseItemForm
 def add_purchase_item(request, pk):
 
     order = get_object_or_404(
@@ -134,7 +134,7 @@ def add_purchase_item(request, pk):
     if request.method == "POST":
 
         form = PurchaseItemForm(request.POST)
-        
+
         if form.is_valid():
 
             product = form.cleaned_data["product"]
@@ -144,7 +144,7 @@ def add_purchase_item(request, pk):
                 messages.error(
                     request,
                     "This product already exists in the purchase order."
-                )  
+                )
 
             else:
 
@@ -161,8 +161,22 @@ def add_purchase_item(request, pk):
 
                 return redirect(
                     "purchase_order_detail",
-                    pk=order.id,
+                    pk=order.pk,
                 )
+
+    else:
+
+        form = PurchaseItemForm()
+
+    return render(
+        request,
+        "orders/purchase_item_form.html",
+        {
+            "form": form,
+            "order": order,
+            "title": "Add Purchase Item",
+        },
+    )
     
 from django.contrib import messages
 
