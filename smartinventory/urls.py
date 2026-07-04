@@ -7,58 +7,68 @@ urlpatterns = [
 
     path(
         "admin/",
-        admin.site.urls
+        admin.site.urls,
     ),
-    
+
+    # Home/Login
     path(
         "",
         include("accounts.urls"),
     ),
 
+    # Dashboard
     path(
-        "",
-        include("dashboard.urls")
+        "dashboard/",
+        include("dashboard.urls"),
     ),
 
+    # Inventory
     path(
         "inventory/",
-        include("inventory.urls")
+        include("inventory.urls"),
     ),
 
+    # Customers
     path(
         "customers/",
-        include("customers.urls")
+        include("customers.urls"),
     ),
 
+    # Suppliers
     path(
         "suppliers/",
-        include("suppliers.urls")
+        include("suppliers.urls"),
     ),
-    
+
+    # Purchase Orders
     path(
         "orders/",
-        include("orders.urls")
+        include("orders.urls"),
     ),
-    
+
+    # Sales Orders
     path(
         "sales/",
         include("orders.sales_urls"),
     ),
-    
+
+    # Reports
     path(
         "reports/",
         include("reports.urls"),
     ),
-    
+
+    # Account URLs
     path(
         "accounts/",
         include("accounts.urls"),
     ),
+
 ]
 
 if settings.DEBUG:
 
     urlpatterns += static(
         settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT
+        document_root=settings.MEDIA_ROOT,
     )

@@ -127,15 +127,12 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
-
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
-
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
@@ -181,11 +178,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 # Authentication
 # --------------------------------------------------
 
-LOGIN_URL = "login"
+LOGIN_URL = "/login/"
 
-LOGIN_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "/dashboard/"
 
-LOGOUT_REDIRECT_URL = "login"
+LOGOUT_REDIRECT_URL = "/login/"
 
 # --------------------------------------------------
 # Default Primary Key

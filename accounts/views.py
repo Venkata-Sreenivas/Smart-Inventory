@@ -6,13 +6,13 @@ from django.contrib import messages
 
 def login_view(request):
 
+    # If already logged in, go to dashboard
     if request.user.is_authenticated:
-        return redirect("home")
+        return redirect("/dashboard/")
 
     if request.method == "POST":
 
         username = request.POST.get("username")
-
         password = request.POST.get("password")
 
         user = authenticate(
@@ -25,13 +25,13 @@ def login_view(request):
 
             login(request, user)
 
-            return redirect("home")
+            return redirect("/dashboard/")
 
         return render(
             request,
             "accounts/login.html",
             {
-                "error": "Invalid username or password."
+                "error": "Invalid username or password.",
             },
         )
 
@@ -46,18 +46,15 @@ def register_view(request):
     if request.method == "POST":
 
         username = request.POST.get("username")
-
         email = request.POST.get("email")
-
         password = request.POST.get("password")
-
         confirm_password = request.POST.get("confirm_password")
 
         if password != confirm_password:
 
             messages.error(
                 request,
-                "Passwords do not match."
+                "Passwords do not match.",
             )
 
             return redirect("register")
@@ -66,7 +63,7 @@ def register_view(request):
 
             messages.error(
                 request,
-                "Username already exists."
+                "Username already exists.",
             )
 
             return redirect("register")
@@ -79,14 +76,14 @@ def register_view(request):
 
         messages.success(
             request,
-            "Account created successfully."
+            "Account created successfully. Please login.",
         )
 
         return redirect("login")
 
     return render(
         request,
-        "accounts/register.html"
+        "accounts/register.html",
     )
 
 
