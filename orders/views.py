@@ -161,7 +161,7 @@ def add_purchase_item(request, pk):
 
                 return redirect(
                     "purchase_order_detail",
-                    pk=order.pk,
+                    pk=order.id,
                 )
 
     else:

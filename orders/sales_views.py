@@ -186,7 +186,7 @@ def add_sales_item(request, pk):
 
                 return redirect(
                     "sales_order_detail",
-                    pk=order.pk,
+                    pk=order.id,
                 )
 
     else:
@@ -199,7 +199,7 @@ def add_sales_item(request, pk):
         {
             "form": form,
             "order": order,
-            "title": "Add Sales Item",
+            "title": "Add Product to Sales Order",
         },
     )
     
