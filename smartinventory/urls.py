@@ -9,6 +9,11 @@ urlpatterns = [
         "admin/",
         admin.site.urls
     ),
+    
+    path(
+        "",
+        include("accounts.urls"),
+    ),
 
     path(
         "",
